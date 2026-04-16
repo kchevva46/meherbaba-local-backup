@@ -1,0 +1,17 @@
+
+/* Environment: Windows 11 */
+/* For app.js */
+/* one time run these commands */
+npx create-react-app meherbaba-ai
+cd meherbaba-ai
+copy ..\app.js src/App.js
+npm install
+
+/* Every time to start app.js */
+npm start
+
+<<<<<<<<<<<<<
+User ID:  meher_admin
+Password: baba123
+>>>>>>>>>>>>>>>>>
+

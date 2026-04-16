@@ -1,0 +1,44 @@
+
+1) Meherbaba.ai => MeherBaba.AI
+2) Change Image   - Done
+3) Replies should be in paragraphs
+4) Source like name of the PDF should appear
+5) Replace "thinking ..." with "hour glass or rotating arrow"
+6) Logout
+7) Place "Your Spiritual Companion" on the lower part of the image (on Meher Baba shirt) in black color with sans serif style font
+  Replace "A Spiritual Companion" with "Ask a question or share a thought"
+  Next Line: MeherBaba.AI 
+
+
+1) Breakdown how $50K is going to spend?
+2) Slides
+3) Register for free - enter user id password, first name last name, and email address
+
++++++++++++++++++++++++++
+Add Login function MeherBaba.AI. You can copy this function similar to what ChatWithGod.AI. 
+Only copy function and otherwise there are no similarities between meherbaba.ai and 
+chatwithgod.ai.
+Details of Login function:
+
+If user didnot have account, he should be allowed to create new account.
+If user is an existing one, prompt to enter email ID and password.
+
+If user didnot have account, he should be allowed to create new account by capturing details like: 
+First Name, Last Name, Email ID, Phone Number with option to choose country code, password, confirm 
+password. USA will be the firdt one in the drop down.
+
+"Login" small box should appear right top conrner.
+After logging in, if you click on Login box, it should contsin these options:
+Profile
+Subscription History
+Deactivate account
+Change password
+Logout
+
+Copy these items from chatwithgod.ai.
+
+
+
+
+
+

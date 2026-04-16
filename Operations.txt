@@ -1,0 +1,36 @@
+
+github.com URL:
+https://github.com/kchevva46/meherbaba-backend.git
+
+
+Local on Windows:
+C:\Users\kchev\Documents\meherbaba-backend
+
+
+<<<<<<<<<<<<<<<<<<<<<<<
+http://localhost:3000
+You should see the MeherBaba.AI login screen. Try logging in with:
+User ID:  meher_admin
+Password: baba123
+
+
+## Restart:
+Terminal 1   python app.py
+Terminal 2   ngrok http 8080
+Terminal 3   npm start
+iPhone       https://meherbaba-ai-app.netlify.app
+
+
+## Making chnages
+Edit and save App.js => make the chnages
+Ctrl+C               =>  | Terminal 3 |
+npm run build
+netlify deploy --prod --dir=build --site=694d19d3-dc3c-4506-ac71-f89d49818068
+npm start
+
+Note: Terminals 1 and 2 never need to be touched** when making frontend changes!
+https://meherbaba-ai-app.netlify.app
+
+LiberChat:
+Start Docker
+http://localhost:3080

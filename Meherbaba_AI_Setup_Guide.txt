@@ -1,0 +1,215 @@
+# Meherbaba.ai — Complete Setup Guide
+**Environment: Windows 11**
+
+---
+
+## PART 1 — ONE TIME SETUP (Do these only once)
+
+### Step 1 — Install Required Software
+Download and install:
+- **Node.js** from nodejs.org (includes npm)
+- **Python 3.x** from python.org (includes pip)
+
+Verify installation:
+```bash
+node --version
+npm --version
+python --version
+```
+
+---
+
+### Step 2 — Create React Project
+```bash
+npx create-react-app meherbaba-ai
+cd meherbaba-ai
+copy C:\path\to\your\app.js src\App.js
+npm install
+```
+
+---
+
+### Step 3 — Add Meher Baba Photo
+```bash
+mkdir src\assets
+copy C:\path\to\icon.png src\assets\icon.png
+```
+
+---
+
+### Step 4 — Install Python Packages
+```bash
+pip install flask flask-cors openai werkzeug
+```
+
+---
+
+### Step 5 — Install ngrok
+```bash
+npm install -g ngrok
+```
+Then:
+1. Go to **dashboard.ngrok.com/signup** → Sign up with GitHub
+2. Click **Skip** on MFA screen
+3. Go to **dashboard.ngrok.com/get-started/your-authtoken**
+4. Copy your token and run:
+```bash
+ngrok config add-authtoken YOUR_TOKEN_HERE
+```
+
+---
+
+### Step 6 — Install and Setup Netlify
+```bash
+npm install -g netlify-cli
+netlify login
+```
+Sign in with GitHub → Click Authorize → Authorization Granted ✅
+
+---
+
+### Step 7 — Build and Deploy Frontend to Netlify
+```bash
+cd C:\meherbaba.ai\Testing\meherbaba-ai
+npm run build
+netlify deploy --prod --dir=build --site=YOUR_SITE_ID
+```
+Your frontend is now permanently live at:
+```
+https://meherbaba-ai-app.netlify.app
+```
+
+---
+
+### Step 8 — Set OpenAI API Key
+```bash
+set OPENAI_API_KEY=sk-proj-your-key-here
+```
+
+---
+
+## PART 2 — DAILY STARTUP ROUTINE (Do these every time)
+
+### Terminal 1 — Start Backend
+```bash
+set OPENAI_API_KEY=sk-proj-your-key-here
+python app.py
+```
+You should see:
+```
+* Running on http://0.0.0.0:8080
+```
+
+---
+
+### Terminal 2 — Start ngrok Tunnel
+```bash
+ngrok http 8080
+```
+You will see a public URL like:
+```
+Forwarding https://unsceptred-unbalkingly-karmen.ngrok-free.dev → http://localhost:8080
+```
+⚠️ Note: This URL changes every time you restart ngrok.
+If URL changes, update BASE_URL in App.js, rebuild and redeploy to Netlify.
+
+---
+
+### iPhone — Open App
+Open Safari on iPhone and go to:
+```
+https://meherbaba-ai-app.netlify.app
+```
+Works from **any network, anywhere** — no WiFi restriction! ✅
+
+---
+
+### Login Credentials
+```
+User ID:   meher_admin
+Password:  baba123
+```
+
+---
+
+## PART 3 — IF ngrok URL CHANGES
+
+Every time you restart ngrok, the URL changes. Here's what to do:
+
+**Step 1 — Get new ngrok URL from Terminal 2**
+```
+Forwarding https://NEW-URL.ngrok-free.app → http://localhost:8080
+```
+
+**Step 2 — Update App.js**
+
+Open `src\App.js` and find this line:
+```js
+const BASE_URL = 'https://OLD-URL.ngrok-free.app';
+```
+Change to:
+```js
+const BASE_URL = 'https://NEW-URL.ngrok-free.app';
+```
+
+**Step 3 — Rebuild and Redeploy**
+```bash
+npm run build
+netlify deploy --prod --dir=build --site=694d19d3-dc3c-4506-ac71-f89d49818068
+```
+iPhone URL stays the same:
+```
+https://meherbaba-ai-app.netlify.app
+```
+
+---
+
+## PART 4 — PROJECT FILE LOCATIONS
+
+| File | Location |
+|---|---|
+| Frontend (App.js) | `C:\meherbaba.ai\Testing\meherbaba-ai\src\App.js` |
+| Backend (app.py) | Wherever you saved it |
+| Meher Baba photo | `C:\meherbaba.ai\Testing\meherbaba-ai\src\assets\icon.png` |
+| Built frontend | `C:\meherbaba.ai\Testing\meherbaba-ai\build\` |
+
+---
+
+## PART 5 — IMPORTANT URLs
+
+| Service | URL |
+|---|---|
+| iPhone App (frontend) | https://meherbaba-ai-app.netlify.app |
+| Netlify Dashboard | https://app.netlify.com/projects/meherbaba-ai-app |
+| ngrok Dashboard | https://dashboard.ngrok.com |
+| OpenAI API Keys | https://platform.openai.com/api-keys |
+
+---
+
+## PART 6 — PENDING TASKS
+
+| Priority | Task |
+|---|---|
+| 🔴 High | Delete exposed OpenAI API key and create new one |
+| 🔴 High | Add rate limiting to app.py to prevent abuse |
+| 🟡 Medium | Fix permanent backend URL (deploy app.py to Railway) |
+| 🟡 Medium | Add more users to login system in app.py |
+| 🟡 Medium | Restrict CORS to meherbaba-ai-app.netlify.app only |
+| 🟢 Low | Submit to Apple App Store and Google Play Store |
+
+---
+
+## PART 7 — TROUBLESHOOTING
+
+| Problem | Solution |
+|---|---|
+| `npm start` not working | Make sure you are in `meherbaba-ai` folder |
+| `python app.py` error | Check OPENAI_API_KEY is set in same terminal |
+| ngrok error "already online" | Run `taskkill /F /IM ngrok.exe` then restart |
+| iPhone can't open app | Check https://meherbaba-ai-app.netlify.app in Safari |
+| Login fails | Make sure Terminal 1 (python app.py) is running |
+| "Network Error" in chat | Check ngrok URL in App.js matches Terminal 2 URL |
+
+---
+
+*Meherbaba.ai — "I have come not to teach but to awaken." — Meher Baba* 🕊️
