@@ -8,7 +8,8 @@ from werkzeug.security import generate_password_hash, check_password_hash
 
 app = Flask(__name__)
 
-# ── CORS — allow meherbaba.ai and localhost for testing ───────────────────────
+# ── CORS — allow meherbaba.ai and localhost ───────────────────────
+# ── for testing
 CORS(app, origins=[
     "https://meherbaba.ai",
     "https://www.meherbaba.ai",
