@@ -82,7 +82,7 @@ document.head.appendChild(globalStyle);
 // ─────────────────────────────────────────────────────────────────────────────
 // CONSTANTS
 // ─────────────────────────────────────────────────────────────────────────────
-const BASE_URL = 'https://meherbaba-backend.up.railway.app';
+const BASE_URL = 'https://web-production-bd27a.up.railway.app';
 const HEADERS  = { 'Content-Type':'application/json', 'ngrok-skip-browser-warning':'true' };
 
 const COUNTRY_CODES = [
