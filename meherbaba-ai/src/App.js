@@ -82,7 +82,7 @@ document.head.appendChild(globalStyle);
 // ─────────────────────────────────────────────────────────────────────────────
 // CONSTANTS
 // ─────────────────────────────────────────────────────────────────────────────
-const BASE_URL = 'https://unsceptred-unbalkingly-karmen.ngrok-free.dev';
+const BASE_URL = 'https://meherbaba-backend.up.railway.app';
 const HEADERS  = { 'Content-Type':'application/json', 'ngrok-skip-browser-warning':'true' };
 
 const COUNTRY_CODES = [
