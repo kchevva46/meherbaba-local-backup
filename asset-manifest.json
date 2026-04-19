@@ -1,0 +1,16 @@
+{
+  "files": {
+    "main.css": "/meherbaba-local-backup/static/css/main.e6c13ad2.css",
+    "main.js": "/meherbaba-local-backup/static/js/main.b936f8fe.js",
+    "static/js/453.f46950d7.chunk.js": "/meherbaba-local-backup/static/js/453.f46950d7.chunk.js",
+    "static/media/icon.png": "/meherbaba-local-backup/static/media/icon.38b9138b304f3a39599e.png",
+    "index.html": "/meherbaba-local-backup/index.html",
+    "main.e6c13ad2.css.map": "/meherbaba-local-backup/static/css/main.e6c13ad2.css.map",
+    "main.b936f8fe.js.map": "/meherbaba-local-backup/static/js/main.b936f8fe.js.map",
+    "453.f46950d7.chunk.js.map": "/meherbaba-local-backup/static/js/453.f46950d7.chunk.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.e6c13ad2.css",
+    "static/js/main.b936f8fe.js"
+  ]
+}
