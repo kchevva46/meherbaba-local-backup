@@ -8,7 +8,7 @@ from werkzeug.security import generate_password_hash, check_password_hash
 
 app = Flask(__name__)
 
-# ── CORS ──────────────────────────────────────────────────────────────────────
+# ── CORS ────────────────────────────────────────────────────────
 CORS(app, origins=[
     "https://meherbaba.ai",
     "https://www.meherbaba.ai",
