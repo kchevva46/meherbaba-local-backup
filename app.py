@@ -8,7 +8,7 @@ from werkzeug.security import generate_password_hash, check_password_hash
 
 app = Flask(__name__)
 
-# ── CORS — allow meherbaba.ai and localhost for testing ───────────────────────
+# ── CORS — allow meherbaba.ai and localhost for testing ───────────────────
 CORS(app, origins=[
     "https://meherbaba.ai",
     "https://www.meherbaba.ai",
@@ -21,7 +21,7 @@ CORS(app, origins=[
 OPENAI_API_KEY = os.environ.get("OPENAI_API_KEY")
 if not OPENAI_API_KEY:
     raise ValueError("OPENAI_API_KEY environment variable is not set!")
-client = OpenAI(api_key=OPENAI_API_KEY)
+client = OpenAI(api_key=OPENAI_API_KEY )
 
 # ── File paths — Railway uses /data volume for persistent storage ─────────────
 # On Railway: set STORAGE_DIR=/data in environment variables
