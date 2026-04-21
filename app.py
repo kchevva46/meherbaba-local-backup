@@ -8,7 +8,7 @@ from werkzeug.security import generate_password_hash, check_password_hash
 
 app = Flask(__name__)
 
-# ── CORS — allow meherbaba.ai and localhost for testing ───────────────────
+# ── CORS ──────────────────────────────────────────────────────────────────────
 CORS(app, origins=[
     "https://meherbaba.ai",
     "https://www.meherbaba.ai",
@@ -17,15 +17,16 @@ CORS(app, origins=[
     "http://localhost:8080",
 ])
 
-# ── OpenAI — ONLY from environment variable, no hardcoded key ────────────────
+# ── OpenAI ────────────────────────────────────────────────────────────────────
 OPENAI_API_KEY = os.environ.get("OPENAI_API_KEY")
 if not OPENAI_API_KEY:
     raise ValueError("OPENAI_API_KEY environment variable is not set!")
-client = OpenAI(api_key=OPENAI_API_KEY )
+client = OpenAI(api_key=OPENAI_API_KEY)
 
-# ── File paths — Railway uses /data volume for persistent storage ─────────────
-# On Railway: set STORAGE_DIR=/data in environment variables
-# Locally:    defaults to the same folder as app.py
+ASSISTANT_ID    = "asst_k3JCVqTt7dlk4RMmmxHLdZoX"
+VECTOR_STORE_ID = "vs_694d9825e0a48191a210172fc49320da"
+
+# ── Storage ───────────────────────────────────────────────────────────────────
 STORAGE_DIR = os.environ.get("STORAGE_DIR", os.path.dirname(os.path.abspath(__file__)))
 USERS_FILE  = os.path.join(STORAGE_DIR, 'users_db.json')
 HISTORY_DIR = os.path.join(STORAGE_DIR, 'chat_history')
@@ -43,7 +44,6 @@ def load_users():
         except Exception as e:
             print(f"Error loading users: {e}")
             return {}
-    # Seed default admin account on first run
     default = {
         "meher_admin@meherbaba.ai": {
             "username":     "meher_admin",
@@ -90,19 +90,16 @@ def save_history(email, history):
     except Exception as e:
         print(f"Error saving history: {e}")
 
-# ── Health check — Railway uses this to verify app is running ─────────────────
+# ── Health check ──────────────────────────────────────────────────────────────
 @app.route('/', methods=['GET'])
-def health():
+def root():
     return jsonify({"status": "ok", "app": "MeherBaba.AI"}), 200
 
 @app.route('/health', methods=['GET'])
 def health_check():
     return jsonify({"status": "ok"}), 200
 
-# ─────────────────────────────────────────────────────────────────────────────
-# AUTH ROUTES
-# ─────────────────────────────────────────────────────────────────────────────
-
+# ── Auth routes ───────────────────────────────────────────────────────────────
 @app.route('/register', methods=['POST'])
 def register():
     data         = request.json
@@ -233,10 +230,7 @@ def get_profile():
         "created_at":   user.get("created_at", 0),
     }), 200
 
-# ─────────────────────────────────────────────────────────────────────────────
-# HISTORY ROUTES
-# ─────────────────────────────────────────────────────────────────────────────
-
+# ── History routes ────────────────────────────────────────────────────────────
 @app.route('/history', methods=['GET'])
 def get_history():
     email = request.args.get("email", "").strip().lower()
@@ -250,10 +244,7 @@ def clear_history():
     save_history(email, [])
     return jsonify({"success": True}), 200
 
-# ─────────────────────────────────────────────────────────────────────────────
-# ASK ROUTE
-# ─────────────────────────────────────────────────────────────────────────────
-
+# ── Ask route — Assistants API with file_search ───────────────────────────────
 @app.route('/ask', methods=['POST'])
 def ask_gpt():
     try:
@@ -293,44 +284,50 @@ def ask_gpt():
         ABSOLUTE RULES: No fabrication. No implied authority. No interpretive language.
         Forbidden: "this implies", "this suggests", "in essence", "the teaching means"."""
 
-        tools = [{"type": "file_search", "vector_store_ids": ['vs_694d9825e0a48191a210172fc49320da']}]
-
-        response = client.responses.create(
-            model="gpt-4-turbo",
-            input=[
-                {"role": "developer", "content": instructions},
-                {"role": "user",      "content": user_question}
-            ],
-            tools=tools
+        # Create a thread — attach vector store here
+        thread = client.beta.threads.create(
+            messages=[{"role": "user", "content": user_question}],
+            tool_resources={
+                "file_search": {
+                    "vector_store_ids": [VECTOR_STORE_ID]
+                }
+            }
         )
 
-        answer_text = response.output_text
+        # Run the assistant
+        run = client.beta.threads.runs.create_and_poll(
+            thread_id=thread.id,
+            assistant_id=ASSISTANT_ID,
+            instructions=instructions
+        )
 
-        # Extract citations
-        citations = []
-        seen = set()
-        try:
-            for item in response.output:
-                for block in getattr(item, 'content', []):
-                    for ann in getattr(block, 'annotations', []):
-                        if getattr(ann, 'type', '') == 'file_citation':
-                            file_id  = getattr(ann, 'file_id', '')
-                            filename = getattr(ann, 'filename', '')
-                            quote    = getattr(ann, 'quote', '')
-                            if not filename and file_id:
-                                try:
-                                    filename = getattr(client.files.retrieve(file_id), 'filename', file_id)
-                                except:
-                                    filename = file_id
-                            display_name = filename.replace('_', ' ').replace('.pdf', '')
-                            if display_name and display_name not in seen:
-                                seen.add(display_name)
-                                citations.append({
-                                    "filename": display_name,
-                                    "quote": quote[:120] if quote else ""
-                                })
-        except Exception as ce:
-            print(f"Citation warning: {ce}")
+        answer_text = "No answer received."
+        citations   = []
+
+        if run.status == 'completed':
+            messages    = client.beta.threads.messages.list(thread_id=thread.id)
+            msg         = messages.data[0]
+            answer_text = msg.content[0].text.value
+
+            # Extract citations
+            seen = set()
+            for annotation in msg.content[0].text.annotations:
+                if file_citation := getattr(annotation, 'file_citation', None):
+                    file_id = file_citation.file_id
+                    try:
+                        file_details = client.files.retrieve(file_id)
+                        filename = getattr(file_details, 'filename', file_id)
+                    except:
+                        filename = file_id
+                    display_name = filename.replace('_', ' ').replace('.pdf', '')
+                    if display_name not in seen:
+                        seen.add(display_name)
+                        citations.append({
+                            "filename": display_name,
+                            "quote": getattr(file_citation, 'quote', "")[:120]
+                        })
+        else:
+            answer_text = f"Request could not be completed. Status: {run.status}"
 
         # Save to history
         if email:
