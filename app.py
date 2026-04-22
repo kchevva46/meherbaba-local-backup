@@ -24,7 +24,7 @@ if not OPENAI_API_KEY:
 client = OpenAI(api_key=OPENAI_API_KEY)
 
 ASSISTANT_ID    = "asst_k3JCVqTt7dlk4RMmmxHLdZoX"
-VECTOR_STORE_ID = "vs_694d9825e0a48191a210172fc49320da"
+VECTOR_STORE_ID = "vs_69e7eb34291881918c3d99319cf9402b"
 
 # ── Storage ───────────────────────────────────────────────────────────────────
 STORAGE_DIR = os.environ.get("STORAGE_DIR", os.path.dirname(os.path.abspath(__file__)))
